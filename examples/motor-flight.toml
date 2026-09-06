@@ -1,0 +1,80 @@
+# All modern calculation and simulation inputs use SI units.
+version = 1
+
+[calculations.nozzle_example]
+type = "nozzle"
+[calculations.nozzle_example.parameters]
+chamber_pressure = 5e6
+exit_pressure = 5e4
+ambient_pressure = 5e4
+temperature = 3600.0
+mass_flow = 100.0
+molecular_weight = 24.0
+gamma = 1.2
+
+[calculations.exit_mach]
+type = "mach"
+[calculations.exit_mach.parameters]
+area_ratio = 5.0
+gamma = 1.2
+
+[calculations.grain_curves]
+type = "grain"
+[calculations.grain_curves.parameters]
+samples = 10
+
+[calculations.static_fire]
+type = "analyze"
+[calculations.static_fire.parameters]
+input = "../data/SRM-1.csv" # Relative to this TOML file
+thrust_unit = "lbf"
+limit = 265
+
+# Historical formulas retain their original parameter names and units.
+[calculations.legacy_geometry]
+type = "legacy.v2.Propellant_Mass"
+[calculations.legacy_geometry.parameters]
+rho_b = 1700.0
+ro = 0.05
+r0 = 0.02
+w = 0.0
+L0 = 0.2
+ngrain = 1
+grain_end = true
+
+# Demonstration inputs, not a calibrated motor model.
+[simulation]
+outer_radius_m = 0.05
+inner_radius_m = 0.02
+length_m = 0.2
+grain_count = 1
+ends_inhibited = true
+density_kg_m3 = 1700.0
+burn_coefficient = 1e-5 # m/s/Pa**burn_exponent
+burn_exponent = 0.4
+characteristic_velocity_m_s = 1500.0
+throat_radius_m = 0.01
+exit_area_m2 = 0.0015707963267948967
+gamma = 1.2
+ambient_pressure_pa = 0.0
+temperature_k = 293.15
+reference_temperature_k = 293.15
+temperature_sensitivity_per_k = 0.0
+erosion_m_s_pa = 0.0
+time_step_s = 0.01
+max_time_s = 120.0
+max_steps = 100000
+
+# One-way motor-to-flight coupling in vacuum. Motor history supplies thrust
+# and propellant mass; total flight mass adds this dry vehicle mass.
+[flight]
+atmosphere = "vacuum" # Explicit approximation for Mars, not an Earth atmosphere
+dry_mass_kg = 5.0
+planet_mass_kg = 6.39e23
+planet_radius_m = 3389500.0
+length_m = 1.0
+diameter_m = 0.1
+target_pitch_rad = 0.0
+time_step_s = 0.05
+max_time_s = 120.0
+max_steps = 100000

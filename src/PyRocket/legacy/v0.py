@@ -6,6 +6,7 @@ Created on Sun Sep 15 23:44:48 2019
 @author: josh
 """
 import numpy as np
+from .common import (T2_T0)
 
 def func(area_rat, k, m2):
     c1 = 2*(k-1)/(k+1)
@@ -77,7 +78,7 @@ def C_F(k, area_rats, p1_p3):
             CFS.append(cf_min)
         else:
             CFS.append(cf)
-    print('Flow Seperation Area Ratio @ k={}, p1/p3={}: '.format(k, p1_p3), 
+    print('Flow Seperation Area Ratio @ k={}, p1/p3={}: '.format(k, p1_p3),
           min(flow_sep_ars))
     return CFS
 
@@ -86,7 +87,7 @@ def area_rat(Mach2s, k):
     for m2 in Mach2s:
         first = 1/m2
         num = 1 + ((k-1)/2)*(m2**2)
-        denom = (k+1)/2 
+        denom = (k+1)/2
         second = num/denom
         secondexp = (k+1)/(2*(k-1))
         ar = first*np.power(second, secondexp)
@@ -102,13 +103,3 @@ def p2_p0(Mach2s, k):
         pr = (1 + first)**exp
         prs.append(pr)
     return prs
-
-
-def T2_T0(Mach2s, k):
-    trs = []
-    for m2 in Mach2s:
-        first = 0.5*(k-1)*(m2**2)
-        tr = 1 + first
-        trs.append(tr)
-    return trs
-

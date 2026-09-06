@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rocket-internal-ballistics"
+version = "0.2.0"
+description = "PyRocket propulsion, flight simulation, and thrust-data analysis"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.21", "tomli>=2; python_version < '3.11'"]
+
+[project.optional-dependencies]
+plot = ["matplotlib>=3.5"]
+
+[project.scripts]
+rocket-ballistics = "PyRocket.cli:main"
+pyrocket = "PyRocket.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["PyRocket*"]

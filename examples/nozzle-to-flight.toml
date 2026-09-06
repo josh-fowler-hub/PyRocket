@@ -1,0 +1,67 @@
+# Earth vertical ascent driven by a generated motor thrust curve. SI units, radians.
+# US Standard Atmosphere 1976 with MAE-540 empirical drag; no planetary rotation.
+version = 1
+
+# Sizing point for an ideal nozzle; the workflow transfers the resulting
+# geometry and characteristic velocity into the motor simulation below.
+[calculations.nozzle_design]
+type = "nozzle"
+[calculations.nozzle_design.parameters]
+chamber_pressure = 1e6
+exit_pressure = 1e5
+ambient_pressure = 101325.0
+temperature = 2400.0
+mass_flow = 0.2
+molecular_weight = 24.0
+gamma = 1.2
+
+# Demonstration grain and burn law; not a calibrated motor.
+# The workflow replaces throat_radius_m, exit_area_m2, characteristic_velocity_m_s,
+# gamma and ambient_pressure_pa with values from the nozzle design.
+# simulate generates thrust and remaining propellant mass through burnout.
+[simulation]
+outer_radius_m = 0.05
+inner_radius_m = 0.02
+length_m = 0.2
+grain_count = 1
+ends_inhibited = true
+density_kg_m3 = 1700.0
+burn_coefficient = 1e-5 # m/s/Pa**burn_exponent
+burn_exponent = 0.4
+characteristic_velocity_m_s = 1500.0
+throat_radius_m = 0.01
+exit_area_m2 = 0.0015707963267948967
+gamma = 1.2
+ambient_pressure_pa = 101325.0 # Reference motor pressure; flight adjusts it with altitude
+temperature_k = 293.15
+reference_temperature_k = 293.15
+temperature_sensitivity_per_k = 0.0
+erosion_m_s_pa = 0.0
+time_step_s = 0.01
+max_time_s = 120.0
+max_steps = 100000
+
+
+# Flight consumes the generated history. Total mass is dry mass plus
+# remaining propellant; no constant thrust, Isp, or burn duration is needed.
+[flight]
+drag_model = "mae540" # Empirical Mach-dependent Cd; reference area defaults to pi*d^2/4
+atmosphere = "us1976" # Earth pressure, valid through 86 km geometric altitude
+dry_mass_kg = 5.0
+planet_mass_kg = 5.972e24
+planet_radius_m = 6371000.0 # Approximate mean Earth radius
+length_m = 1.0
+diameter_m = 0.1
+initial_altitude_m = 0.0
+initial_vx_m_s = 0.0
+initial_vy_m_s = 0.0
+initial_pitch_rad = 0.0
+target_pitch_rad = 0.0 # +x is radially outward at launch; hold vertical
+gimbal_limit_rad = 0.7853981633974483
+kp = 0.055
+kd = 0.11
+ki = 0.000011
+control_delay_s = 0.1
+time_step_s = 0.1
+max_time_s = 2000.0 # Coast through apogee and stop at surface impact
+max_steps = 30000
